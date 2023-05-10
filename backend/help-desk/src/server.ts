@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dbConn from './database/db-conn';
+import MainRoutes from './routes/main-route';
 
 
 class Server
@@ -42,11 +43,14 @@ class Server
                this.StatusDb = true;
           });
 
+
+          // routes
+          this.App.use('/', MainRoutes.Routes);
+
+          // start server
           if (this.StatusDb) this.Start();
           else console.log('Database not connected');
-
-
-          // routes 
+          
 
      }
 
