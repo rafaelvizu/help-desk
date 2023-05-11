@@ -5,51 +5,51 @@ import User from "./user";
 
 
 const Client = dbConn.define('client', {
-     nome: {
+     name: {
           type: DataTypes.STRING,
           allowNull: false,
      },
-     sexo: {
-          type: DataTypes.ENUM('M', 'F'),
+     gender: {
+          type: DataTypes.ENUM('M', 'F', 'N/A'),
           allowNull: true,
      },
-     dataNascimento: {
+     dateBirth: {
           type: DataTypes.DATE,
           allowNull: true,
      },
-     endereco: {
+     address: {
           type: DataTypes.STRING,
           allowNull: true,
      },
-     numero: {
+     number: {
           type: DataTypes.INTEGER,
           allowNull: true,
      },
-     complemento: {
+     complement: {
           type: DataTypes.STRING,
           allowNull: true,
      },
-     bairro: {
+     district: {
           type: DataTypes.STRING,
           allowNull: true,
      },
-     cidade: {
+     city: {
           type: DataTypes.STRING,
           allowNull: true,
      },
-     estado: {
+     state: {
           type: DataTypes.STRING(2),
-          allowNull: true,
+           allowNull: true,
      },
      cep: {
           type: DataTypes.STRING(7),
           allowNull: true,    
      },
-     telefone_1: {
+     phone_1: {
           type: DataTypes.STRING(11),
           allowNull: true,
      },
-     telefone_2: {
+     phone_2: {
           type: DataTypes.STRING(11),
           allowNull: true,
      },

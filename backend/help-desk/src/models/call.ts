@@ -4,7 +4,7 @@ import Cliente from "./client";
 
 
 const Call = dbConn.define('call', {
-     assunto: {
+     subject: {
           type: DataTypes.ENUM('SUPORTE', 'VISITA TÉCNICA', 'FINANCEIRO', 'OUTROS'),
           allowNull: false,
      },
@@ -12,7 +12,7 @@ const Call = dbConn.define('call', {
           type: DataTypes.ENUM('ABERTO', 'EM PROGRESSO', 'ATENDIDO'),
           allowNull: false,
      },
-     complemento: {
+     complement: {
           type: DataTypes.STRING,
           allowNull: false,
      },
@@ -21,7 +21,7 @@ const Call = dbConn.define('call', {
 // um cliente pode ter vários chamados
 Cliente.hasMany(Call, {
      foreignKey: {
-          name: 'clienteId',  
+          name: 'clientId',  
           allowNull: false,
      },
      onDelete: 'CASCADE',
@@ -31,7 +31,7 @@ Cliente.hasMany(Call, {
 // um chamado pertence a um cliente
 Call.belongsTo(Cliente, {     
      foreignKey: {
-          name: 'clienteId',
+          name: 'clientId',
           allowNull: false,
      },
      onDelete: 'CASCADE',

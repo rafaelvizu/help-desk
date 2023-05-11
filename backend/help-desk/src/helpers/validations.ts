@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { IClientBody } from "./interfaces";
 
 
 const nameSchema = Joi.object({
@@ -20,6 +21,24 @@ const registerSchema = Joi.object({
      email: Joi.string().email().required(),
      password: Joi.string().min(6).required(),
      confirmPassword: Joi.string().min(6).required().valid(Joi.ref('password')),
+});
+
+const clientSchema = Joi.object({
+     name: Joi.string().min(3).max(255).trim().required(),
+     gender: Joi.string().valid('M', 'F', 'N/1'),
+     dateBirth: Joi.date(),
+     address: Joi.string().min(1).max(100).trim(),
+     number: Joi.number().integer(),
+     complement: Joi.string().min(1).max(100).trim(),
+     district: Joi.string().min(1).max(100).trim(),
+     city: Joi.string().min(1).max(100).trim(),
+     state: Joi.string().length(2).pattern(/^[A-Z]+$/i),
+     cep: Joi.string().length(7).pattern(/^[0-9]+$/i),
+     phone_1: Joi.string().length(11).pattern(/^[0-9]+$/i),
+     phone_2: Joi.string().length(11).pattern(/^[0-9]+$/i),
+     email: Joi.string().email().max(255).trim(),
+     cpf: Joi.string().length(11).pattern(/^[0-9]+$/i),
+     cnpj: Joi.string().length(14).pattern(/^[0-9]+$/i),
 });
 
 
@@ -60,5 +79,15 @@ export function validateLogin(email: string, password: string)
      if (error) return String(error.details[0].message);
      
      return null;
+}
+
+
+export function validateClient(client: IClientBody) : string | IClientBody
+{
+     const { error, value } = clientSchema.validate(client);
+     
+     if (error) return String(error.details[0].message);
+     
+     return value as IClientBody;
 }
 

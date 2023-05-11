@@ -33,3 +33,22 @@ export interface ITokenDecoded {
      iat: number;
      exp: number;
 };
+
+export interface IClientBody
+{
+     name: string;
+     gender: number;
+     dateBirth: string;    
+     address: string;
+     number: number;
+     complement: string; 
+     district: string;
+     city: string;
+     state: string;
+     cep: string;
+     phone_1: string;    
+     phone_2: string;
+     email: string;
+     cpf: string;
+     cnpj: string;
+};
