@@ -1,6 +1,7 @@
 import { Router } from "express";
 import UserController from "../controllers/user-controller";
 import { checkAuth, checkUnAuth } from "../helpers/check-auth";
+import saveImages from "../helpers/save-images";
 
 
 class UserRoutes
@@ -14,7 +15,7 @@ class UserRoutes
 
           this.Router.delete('/logout', checkAuth, UserController.Logout);
           this.Router.get('/profile', checkAuth, UserController.Profile);
-          this.Router.put('/update-profile', checkAuth, UserController.UpdateProfile);
+          this.Router.put('/update-profile', checkAuth, saveImages, UserController.UpdateProfile);
 
           return this.Router;
      }

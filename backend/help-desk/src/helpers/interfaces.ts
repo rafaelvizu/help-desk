@@ -24,6 +24,7 @@ export interface IUserUpdate {
      name: string;
      password: string;
      confirmPassword: string;
+     profileImage: string;
 };
 
 export interface ITokenDecoded {

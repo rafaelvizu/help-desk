@@ -41,9 +41,8 @@ export async function checkAuth(req: Request, res: Response, next: NextFunction)
           if (user === undefined) return res.status(500).json({ message: 'internal server error' });
           else if (user === null) return res.status(404).json({ message: 'user not found' });
 
-          req.body.user = {};
-          req.body.user.id = user.id;
-          req.body.user.email = user.email;
+          // para acessar os dados no controller
+          res.locals.user = user;
 
           return next();
      }

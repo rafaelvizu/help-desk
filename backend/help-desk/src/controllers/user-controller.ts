@@ -1,13 +1,15 @@
 import { Request, Response } from "express";
-import bcrypt from "bcryptjs";
+import fs from "fs";
 
+// models
 import User from "../models/user";
 
-// interfaces
+// helpers/interfaces
 import { IUserLogin, IUserRegister, IUserUpdate } from "../helpers/interfaces";
+
+// helpers/*
 import GetUser from "../helpers/get-user";
 import { validateLogin, validateName, validatePassword, validateRegister } from "../helpers/validations";
-import saveImages from "../helpers/save-images";
 import { generateToken } from "../helpers/token";
 import { compareHashPassword, getHashPassword } from "../helpers/hash-password";
 
@@ -85,7 +87,8 @@ class UserController
 
      static async Profile(req: Request, res: Response) : Promise<Response>
      {    
-          const { id, email } = req.body.user;
+          const { id, email } = res.locals.user;
+          
 
           const user = await User.findOne({
                where: {
@@ -102,16 +105,22 @@ class UserController
 
           if (user === undefined) return res.status(500).json({ message: 'internal server error' });
 
+          // pega a url da imagem e transforma em base 64
+          if (user.profileImage != null)
+          {
+               const image = fs.readFileSync(`./uploads/profile-images/${user.profileImage}`).toString('base64');
+               user.profileImage = image;
+          }
+
           return res.status(200).json({ message: 'profile', user });          
      }
 
      static async UpdateProfile(req: Request, res: Response) : Promise<Response>
      {
           const { name, password, confirmPassword } = req.body as IUserUpdate;
-          const { id, email } = req.body.user;
+          const { id, email } = res.locals.user;
 
-
-          if (!name && !password && !confirmPassword) 
+          if (!name && !password && !confirmPassword && !req.file) 
           {
                return res.status(422).json({ message: 'no data to update' });
           }
@@ -141,20 +150,46 @@ class UserController
                upd.name = name;
           }
 
+          if (req.file)
+          {
+               upd.profileImage = req.file.filename;
+          }
 
-          await User.update(upd, {
-               where: {
-                    id,
-                    email,
-               },
-          })
-          .then(() => {
-               return res.status(200).json({ message: 'update profile' });
-          })
-          .catch((error) => {
+          
+          try
+          {
+               const profileImage = await User.findOne({
+                    where: {
+                         id,
+                         email,
+                    },
+                    attributes: ['profileImage'],
+                    raw: true,
+               }) as any;
+
+               if (profileImage === null) return res.status(404).json({ message: 'user not found' });
+
+               if (profileImage.profileImage != null)
+               {
+                    // deletar imagem antiga
+                    fs.unlinkSync(`./uploads/profile-images/${profileImage.profileImage}`);
+               }
+
+               await User.update(upd, {
+                    where: {
+                         id,
+                         email,
+                    },
+               })
+               .then(() => {
+                    return res.status(200).json({ message: 'profile updated' });
+               });
+          }
+          catch (error)  
+          {
                console.error(error);
                return res.status(500).json({ message: 'internal server error' });
-          });
+          }
 
           return res.end();
      }

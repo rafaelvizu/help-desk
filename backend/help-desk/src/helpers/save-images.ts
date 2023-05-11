@@ -6,9 +6,6 @@ const storage: StorageEngine = multer.diskStorage({
      destination: function (req, file, cb) {
           cb(null, './uploads/profile-images')
      },
-     filename: function (req, file, cb) {
-          cb(null, `profile-image-${req.body.user.id}-${req.body.user.email}`)
-     },
 });
 
 const upload = multer({ storage,
@@ -30,19 +27,22 @@ const upload = multer({ storage,
                cb(null, true);
           }
      },
+
 });
 
-function saveImages(req: Request, res: Response, next: NextFunction)
+function saveImages(req: Request, res: Response, next: NextFunction) : Response | void
 {
+
+
      upload.single('profileImage')(req, res, (err) => {
+          
           if (err == null || err.message == 'No file sent!')
           {
-               next(); 
+               return next(); 
           }
+
           return res.status(422).json({ message: err.message });  
      });
-
-     res.end();
 }
 
 
