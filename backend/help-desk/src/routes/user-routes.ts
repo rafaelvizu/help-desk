@@ -1,5 +1,7 @@
 import { Router } from "express";
 import UserController from "../controllers/user-controller";
+import { checkAuth, checkUnAuth } from "../helpers/check-auth";
+
 
 class UserRoutes
 {
@@ -7,12 +9,12 @@ class UserRoutes
 
      public static get Routes() : Router
      {
-          this.Router.post('/register', UserController.Register);
-          this.Router.post('/login', UserController.Login);
+          this.Router.post('/register', checkUnAuth, UserController.Register);
+          this.Router.post('/login', checkUnAuth, UserController.Login);
 
-          this.Router.delete('/logout', UserController.Logout);
-          this.Router.get('/profile', UserController.Profile);
-          this.Router.put('/updata-profile', UserController.UpdateProfile);
+          this.Router.delete('/logout', checkAuth, UserController.Logout);
+          this.Router.get('/profile', checkAuth, UserController.Profile);
+          this.Router.put('/update-profile', checkAuth, UserController.UpdateProfile);
 
           return this.Router;
      }

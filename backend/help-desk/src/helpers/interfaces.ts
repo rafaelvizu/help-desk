@@ -23,5 +23,12 @@ export interface IUserRegister {
 export interface IUserUpdate {
      name: string;
      password: string;
-     profileImage: string;
+     confirmPassword: string;
+};
+
+export interface ITokenDecoded {
+     id: number;
+     email: string;
+     iat: number;
+     exp: number;
 };

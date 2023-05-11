@@ -1,14 +1,15 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 
 import User from "../models/user";
 
 // interfaces
 import { IUserLogin, IUserRegister, IUserUpdate } from "../helpers/interfaces";
 import GetUser from "../helpers/get-user";
-import { validateLogin, validateRegister } from "../helpers/validations";
+import { validateLogin, validateName, validatePassword, validateRegister } from "../helpers/validations";
 import saveImages from "../helpers/save-images";
+import { generateToken } from "../helpers/token";
+import { compareHashPassword, getHashPassword } from "../helpers/hash-password";
 
 
 class UserController
@@ -28,13 +29,11 @@ class UserController
                if (user === null) return res.status(404).json({ message: 'user not found' });
 
                // o erro para requisção 
-               const passwordIsValid = await bcrypt.compare(password, user.password);
+               const passwordIsValid = await compareHashPassword(password, user.password);
                if (!passwordIsValid) return res.status(401).json({ message: 'invalid credentials' });
 
                // gerar token
-               const token = jwt.sign({ id: user.id, email: user.email }, process.env.SECRET_KEY as string, {
-                    expiresIn: 86400,
-               });
+               const token = generateToken(user.email, user.id);
 
                return res.status(201).json({ message: 'login', token });
           }
@@ -62,9 +61,7 @@ class UserController
 
 
           // criptografar senha
-          const salt = await bcrypt.genSalt(12);
-          const hash = await bcrypt.hash(password, salt);
-
+          const hash = await getHashPassword(password);
 
           // vamos criar o usuário e pegar o id
           const newUser = await User.create({
@@ -75,9 +72,7 @@ class UserController
           }) as any;
 
           // definir o token
-          const token = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.SECRET_KEY as string, {
-               expiresIn: 86400,
-          });
+          const token = generateToken(newUser.email, newUser.id);
 
           return res.status(201).json({ message: 'register', token });
      }
@@ -89,42 +84,79 @@ class UserController
      }
 
      static async Profile(req: Request, res: Response) : Promise<Response>
-     {
-          const token = req.headers.authorization as string;
-          try
-          {
-               const tokenFormat = token.split(' ')[1];
-               const decoded = jwt.verify(tokenFormat, process.env.SECRET_KEY as string) as any;
+     {    
+          const { id, email } = req.body.user;
 
-               const user = await User.findOne({
-                    where: {
-                         id: decoded.id,
-                         email: decoded.email,
-                    },
-                    attributes: ['name', 'email', 'profileImage'],
-                    raw: true,
-               })
-               .catch((error) => {
-                    console.error(error);
-                    return undefined;
-               });
+          const user = await User.findOne({
+               where: {
+                    id,
+                    email,
+               },
+               attributes: ['name', 'email', 'profileImage'],
+               raw: true,
+          })
+          .catch((error) => {
+               console.error(error);
+               return undefined;
+          }) as any;
 
-               if (user === undefined) return res.status(500).json({ message: 'internal server error' });
-               else if (user === null) return res.status(404).json({ message: 'user not found' });
+          if (user === undefined) return res.status(500).json({ message: 'internal server error' });
 
-               return res.status(200).json({ message: 'profile', user });
-          }
-          catch (error)
-          {
-               return res.status(401).json({ message: 'invalid token' });
-          }
+          return res.status(200).json({ message: 'profile', user });          
      }
 
      static async UpdateProfile(req: Request, res: Response) : Promise<Response>
      {
-          const { name, password, profileImage } = req.body as IUserUpdate;
+          const { name, password, confirmPassword } = req.body as IUserUpdate;
+          const { id, email } = req.body.user;
 
-          return res.status(200).json({ message: 'update profile' });
+
+          if (!name && !password && !confirmPassword) 
+          {
+               return res.status(422).json({ message: 'no data to update' });
+          }
+
+          const upd = {} as IUserUpdate
+          // validar dados
+          if (password || confirmPassword)
+          {
+               const validate = validatePassword(password, confirmPassword);
+               if (validate !== null) return res.status(422).json({ message: validate });
+               const hash = await getHashPassword(password)
+               .catch((error) => {
+                    console.error(error);
+                    return undefined;
+               })
+
+               if (hash === undefined) return res.status(500).json({ message: 'internal server error' });
+
+               upd.password = hash;
+          }
+
+          if (name)
+          {
+               const validate = validateName(name);
+               if (validate !== null) return res.status(422).json({ message: validate });
+
+               upd.name = name;
+          }
+
+
+          await User.update(upd, {
+               where: {
+                    id,
+                    email,
+               },
+          })
+          .then(() => {
+               return res.status(200).json({ message: 'update profile' });
+          })
+          .catch((error) => {
+               console.error(error);
+               return res.status(500).json({ message: 'internal server error' });
+          });
+
+          return res.end();
      }
 
 }
