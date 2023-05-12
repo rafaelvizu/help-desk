@@ -37,7 +37,7 @@ export interface ITokenDecoded {
 export interface IClientBody
 {
      name: string;
-     gender: number;
+     gender: string;
      dateBirth: string;    
      address: string;
      number: number;

@@ -20,7 +20,26 @@ class ClientController
 
           try
           {
-               const client = await Client.create({ ...validate, userId: id })
+               const client = await Client.create({
+                    name: validate.name,
+                    gender: validate.gender,
+                    dateBirth: validate.dateBirth,
+                    address: validate.address,
+                    number: validate.number,
+                    complement: validate.complement,
+                    district: validate.district,
+                    city: validate.city,
+                    state: validate.state,
+                    cep: validate.cep,
+                    phone_1: validate.phone_1,
+                    phone_2: validate.phone_2,
+                    email: validate.email,
+                    cpf: validate.cpf,
+                    cnpj: validate.cnpj,
+                    userId: id,
+               }) as any; 
+
+               client.userId = undefined;    
                return res.status(201).json({ message: 'client created', client });
           }
           catch (err)
@@ -33,8 +52,34 @@ class ClientController
 
      public static async Update(req: Request, res: Response) : Promise<Response>
      {
+          const { id } = req.params;
+          const { id: userId } = res.locals.user;
+          const body = req.body as IClientBody;
 
-          return res.status(201).json({ message: 'client updated' });
+          const validate = validateClient(body);
+
+          if (typeof validate === 'string') return res.status(400).json({ message: validate });
+
+          try
+          {
+               // check if client exists
+               const client = await Client.findOne({ where: { id, userId } });
+
+               if (!client) return res.status(404).json({ message: 'client not found' });
+
+               // update client
+               await Client.update(validate, {
+                    where: { id, userId }
+               });  
+           
+               return res.status(200).json({ message: 'client updated' });
+          }
+          catch (err)
+          {
+               console.error(err);
+               return res.status(500).json({ message: 'internal server error' });
+          }
+
      }
 
      public static async Delete(req: Request, res: Response) : Promise<Response>
@@ -42,8 +87,11 @@ class ClientController
           const { id } = req.params;
           const { id: userId } = res.locals.user;
 
-          Client.destroy({ where: { id, userId } })
-          .then(() => res.status(204).json({ message: 'client deleted' }))
+          await Client.destroy({ where: { id, userId } })
+          .then((del) => {
+               if (!del) return res.status(404).json({ message: 'client not found' });
+               return res.status(200).json({ message: 'client deleted' });
+          })
           .catch(err => {
                console.error(err);
                return res.status(500).json({ message: 'internal server error' });
@@ -57,7 +105,10 @@ class ClientController
           const { id } = req.params;
           const { id: userId } = res.locals.user;
 
-          await Client.findOne({ where: { id, userId }, raw: true })
+          await Client.findOne({ where: { id, userId }, 
+               attributes: { exclude: ['userId'] },
+               raw: true 
+          })
           .then((client) => {
                if (!client) return res.status(404).json({ message: 'client not found' });
                return res.status(200).json({ message: 'client found', client });
@@ -74,7 +125,11 @@ class ClientController
      {
           const { id } = res.locals.user;
 
-          await Client.findAll({ where: { userId: id }, raw: true })
+          await Client.findAll({ where: 
+               { userId: id }, 
+               attributes: { exclude: ['userId'] },
+               raw: true 
+          })
           .then((clients) => {
                if (!clients) clients = [];
                return res.status(200).json({ message: 'clients found', clients });
