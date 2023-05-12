@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { IClientBody } from "./interfaces";
+import { ICallBody, IClientBody } from "./interfaces";
 
 
 const nameSchema = Joi.object({
@@ -39,6 +39,13 @@ const clientSchema = Joi.object({
      email: Joi.string().email().max(255).trim(),
      cpf: Joi.string().length(11).pattern(/^[0-9]+$/i),
      cnpj: Joi.string().length(14).pattern(/^[0-9]+$/i),
+});
+
+const callSchema = Joi.object({
+     subject: Joi.string().valid('SUPORTE', 'VISITA TÉCNICA', 'FINANCEIRO', 'OUTROS').required(),
+     status: Joi.string().valid('ABERTO', 'EM PROGRESSO', 'ATENDIDO').required(),
+     complement: Joi.string().min(1).max(255).trim().required(),
+     clientId: Joi.number().integer().required(),
 });
 
 
@@ -91,3 +98,11 @@ export function validateClient(client: IClientBody) : string | IClientBody
      return value as IClientBody;
 }
 
+export function validateCall(call: ICallBody) : string | ICallBody
+{
+     const { error, value } = callSchema.validate(call);
+     
+     if (error) return String(error.details[0].message);
+     
+     return value as ICallBody;
+}

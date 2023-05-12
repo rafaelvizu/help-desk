@@ -52,3 +52,11 @@ export interface IClientBody
      cpf: string;
      cnpj: string;
 };
+
+export interface ICallBody
+{
+     subject: string;
+     status: string;
+     complement: string;
+     clientId: number;
+};
