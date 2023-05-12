@@ -59,4 +59,5 @@ export interface ICallBody
      status: string;
      complement: string;
      clientId: number;
+     userId: number;
 };
