@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiAtSign } from 'react-icons/fi';
+import { ILogin } from '../../../helpers/interfaces';
 
 function Login()
 {
@@ -11,19 +12,48 @@ function Login()
      {
           event.preventDefault()
 
-          if (email === '' || password === '')
+          if (!email || !password)
           {
-               toast.error('Preencha todos os campos!');
+               toast.error('Please fill in all fields');
                return;
+          }
+
+          const data: ILogin = { email, password };
+
+          console.log(data);
+     }
+
+     function handleShowPassword()
+     {
+          const passwordInput = document.getElementById('password') as HTMLInputElement;
+          const span = document.querySelector('span') as HTMLSpanElement;
+
+          if (passwordInput.type === 'password')
+          {
+               passwordInput.type = 'text';
+               passwordInput.focus();
+               span.innerText = 'hide password';  
+               return;  
+          }
+
+          passwordInput.type = 'password';
+          span.innerText = 'show password';
+     }
+
+
+     const styles = {
+          showPassword: {
+               cursor: 'pointer',
+               color: '#444444',
+               fontSize: 12,
+               fontWeight: 500,
           }
      }
 
-     // para centralizar os itens de um container na tela, basta adicionar a classe "center" no container
-     // na vertical, basta adicionar a classe "valign-wrapper" no container
      return (
           <div className="container">
                <div className="row card-panel hoverable">
-                    <h4 className="center">ENTRAR</h4>
+                    <h4 className="center">SIGN IN</h4>
                     <hr style={{margin: 20}}/>
                     <form action="" className="col m6 s12" onSubmit={handleSubmit}>
                          <div className="input-field">
@@ -38,9 +68,14 @@ function Login()
                               value={password} onChange={(e) => setPassword(e.target.value)} className="validate" min={6} required/>
                          </div>
 
-                         <div className="input-field">
-                              <button className="btn waves-effect waves-light" type="submit" name="action">Entrar
-                              </button>
+                         <div className='show-password'>
+                              <span onClick={() => handleShowPassword()} style={styles.showPassword}>
+                                   show password
+                              </span>
+                         </div>
+
+                         <div className="input-field"> 
+                              <button className="btn waves-effect waves-light" type="submit" name="action">Sign In</button>
                          </div>
                          
                     </form>
@@ -49,7 +84,7 @@ function Login()
                     </div>
 
                     <div className='col m12 s12'>
-                         <p className="center">Não tem uma conta? <a href="/register">Registre-se</a></p>
+                         <p className="center">Don't have an account? <a href="/register">Sign Up</a></p>
                     </div>
                </div>
                
