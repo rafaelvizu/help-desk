@@ -1,14 +1,19 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { toast } from 'react-toastify';
 import { FiAtSign } from 'react-icons/fi';
 import { ILogin } from '../../../helpers/interfaces';
+import login from '../../../helpers/login';
+import { AuthContext } from '../../../contexts/auth';
 
 function Login()
 {
      const [email, setEmail] = useState<string>('')
      const [password, setPassword] = useState<string>('');
 
-     function handleSubmit(event: React.FormEvent<HTMLFormElement>)
+     const { token, setToken } = useContext(AuthContext);
+
+
+     async function handleSubmit(event: React.FormEvent<HTMLFormElement>)
      {
           event.preventDefault()
 
@@ -19,8 +24,17 @@ function Login()
           }
 
           const data: ILogin = { email, password };
+          const TOKEN: string | null = await login(data);
 
-          console.log(data);
+          if (!token)
+          {
+               toast.error('Error signing in');
+               return;
+          }
+
+          setToken(TOKEN as string);
+          toast.success('Successfully signed in');
+
      }
 
      function handleShowPassword()
