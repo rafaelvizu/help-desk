@@ -1,0 +1,4 @@
+dist
+ignorar todos os arquivos da pasta uploads menos o arquivo .path
+uploads/*
+!uploads/.path
