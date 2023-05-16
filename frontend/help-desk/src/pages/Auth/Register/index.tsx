@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { FiAtSign } from 'react-icons/fi';
 import { IRegister } from '../../../helpers/interfaces';
 import styles from '../../../helpers/styles';
+import register from '../../../helpers/register';
 
 
 function Register()
@@ -10,20 +11,20 @@ function Register()
      const [name, setName] = useState<string>('');
      const [email, setEmail] = useState<string>('')
      const [password, setPassword] = useState<string>('');
-     const [passwordConfirm, setPasswordConfirm] = useState<string>('');   
+     const [confirmPassword, setConfirmPassword] = useState<string>('');   
 
 
-     function handleSubmit(event: React.FormEvent<HTMLFormElement>)
+     async function handleSubmit(event: React.FormEvent<HTMLFormElement>)
      {
           event.preventDefault()
 
-          if (!name || !email || !password || !passwordConfirm)
+          if (!name || !email || !password || !confirmPassword)
           {
                toast.error('Please fill in all fields');
                return;
           }
 
-          if (password !== passwordConfirm)
+          if (password !== confirmPassword)
           {
                toast.error('Passwords do not match');
                return;
@@ -33,11 +34,18 @@ function Register()
                name,
                email,
                password,
-               passwordConfirm
+               confirmPassword,
           };
 
 
-          console.log(data);  
+          const token: string | null = await register(data);
+          if (token === null)
+          {
+               toast.error('An error occurred while registering');
+               return;
+          }
+
+          toast.success('Registered successfully');
 
 
      }
@@ -89,7 +97,7 @@ function Register()
                          <div className="input-field">
                               <label htmlFor="passwordConfirm">Confirm Password</label>
                               <input type="password" name="passwordConfirm" id="passwordConfirm"
-                              value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} className="validate" min={6} max={255} 
+                              value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="validate" min={6} max={255} 
                               required/>
                          </div>
 

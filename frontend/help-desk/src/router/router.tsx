@@ -1,8 +1,8 @@
 import { Navigate } from "react-router-dom";
+import { useState, useContext, useEffect } from "react";
+import { AuthContext } from "../contexts/auth";
 
 
-// configurar ract para que ele entenda que o componente é um componente
-// e não uma função
 interface RouteWrapperProps
 {
      defaultComponent: React.ComponentType;
@@ -15,7 +15,37 @@ export default function RouteWrapper({
      isPrivate,
 }: RouteWrapperProps)
 {
-     const signed = false;
+     const [signed, setSigned] = useState(false);
+     const [loading, setLoading] = useState(true);
+     const { token, setToken } = useContext(AuthContext);
+
+     useEffect(() => {
+          if (token)
+          {
+               setSigned(true);
+               setLoading(false);
+               localStorage.setItem('token', token);
+               return;
+          }
+          const tokenLocal: string | null = localStorage.getItem('token')
+          if (tokenLocal)
+          {
+               setToken(tokenLocal);
+               setSigned(true);
+               setLoading(false);
+               return;
+          }
+
+          setSigned(false);
+          setToken('');
+          setLoading(false);
+
+     }, [token, setToken]);
+
+     if (loading)
+     {
+          return <></>
+     }
 
      if (!signed && isPrivate)
      {

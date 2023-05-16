@@ -10,7 +10,7 @@ function Login()
      const [email, setEmail] = useState<string>('')
      const [password, setPassword] = useState<string>('');
 
-     const { token, setToken } = useContext(AuthContext);
+     const { setToken } = useContext(AuthContext);
 
 
      async function handleSubmit(event: React.FormEvent<HTMLFormElement>)
@@ -26,7 +26,7 @@ function Login()
           const data: ILogin = { email, password };
           const TOKEN: string | null = await login(data);
 
-          if (!token)
+          if (TOKEN === null)
           {
                toast.error('Error signing in');
                return;

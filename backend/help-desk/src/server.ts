@@ -29,12 +29,15 @@ class Server
 
           this.App.use(express.json());
           this.App.use(express.urlencoded({ extended: true }));
-               this.App.use(cors({
-                    origin: '*',
-                    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-                    allowedHeaders: ['Content-Type', 'Authorization'],
-                    credentials: true,
-               }));
+          this.App.use(cors({
+               origin: '*',
+               methods: ['GET', 'POST', 'PUT', 'DELETE'],
+               allowedHeaders: ['Content-Type', 'Authorization'],
+               credentials: true,
+          }));
+
+
+          this.App.use(express.static('./public'));
 
           // database
           await dbConn.sync({ force: false })
@@ -44,8 +47,8 @@ class Server
           });
 
 
-          // routes
           this.App.use('/', MainRoutes.Routes);
+          
 
           // start server
           if (this.StatusDb) this.Start();
