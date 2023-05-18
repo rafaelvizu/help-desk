@@ -12,27 +12,27 @@ interface Props {
 
 function AuthProvider(props: Props)
 {
-     const [token, setToken] = useState<string | undefined>('');
-     const [user, setUser] = useState<IUser | undefined>({} as IUser);
+     const [token, setToken] = useState<string | undefined>(undefined);
+     const [user, setUser] = useState<IUser | undefined>(undefined);
 
      useEffect(() => {
           if (token)
-          {
-               Profile()
+          {    
+               updateProfile(token);
           }
-     }, [token, setToken]);
+     }, [token]);
 
-     async function Profile()
+     async function updateProfile(userToken: string)
      {
-          const userRes: IUser | null = await profile(token as string);
-          if (user === null)
+          const user = await profile(userToken);
+          if (user !== null)
           {
-               setUser({} as IUser);
-               return;
+               setUser(user);
+               return;   
           }
 
-          setUser(userRes as IUser);
-     }
+          setUser(undefined)
+     }     
 
      return (
           <AuthContext.Provider value={{ token, setToken, setUser, user }}>

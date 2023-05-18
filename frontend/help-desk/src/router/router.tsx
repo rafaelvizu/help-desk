@@ -49,7 +49,7 @@ export default function RouteWrapper({
 
      if (!signed && isPrivate)
      {
-          return <Navigate to="/login" />
+          return <Navigate to="/signin" />
      }
 
      if (signed && !isPrivate)

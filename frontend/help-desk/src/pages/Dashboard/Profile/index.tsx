@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AuthContext } from "../../contexts/auth";
+import { AuthContext } from "../../../contexts/auth";
 
 function Profile()
 {
@@ -9,7 +9,7 @@ function Profile()
           <main className="container center">
                <div className="row card-panel hoverable">
                     <div>
-                         <img src={user?.profileImage || `${import.meta.env.VITE_API_URL}/profile.png`} alt="foto de perfil" 
+                         <img src={user?.profileImage} alt="foto de perfil" 
                          className="circle responsive-img" width="100" height="100"
                          />
                          <div className="row">

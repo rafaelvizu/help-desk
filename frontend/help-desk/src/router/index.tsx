@@ -2,10 +2,11 @@ import {Routes, Route, BrowserRouter} from 'react-router-dom';
 import RouteWrapper from './router';
 
 // pages
-import Login from '../pages/Auth/Login';
-import Register from '../pages/Auth/Register'; 
+import Signin from '../pages/Auth/Signin';
+import Signup from '../pages/Auth/Signup'; 
 import Home from '../pages/Dashboard/Home';
 import Profile from '../pages/Dashboard/Profile';
+import CreateClient from '../pages/Dashboard/CreateClient';
 
 
 // components
@@ -22,8 +23,9 @@ export default function Router()
                <Routes>
                     <Route path='/' element={<RouteWrapper defaultComponent={Home} isPrivate={true} />} />
                     <Route path='/profile' element={<RouteWrapper defaultComponent={Profile} isPrivate={true} />} />
-                    <Route path="/login" element={<RouteWrapper defaultComponent={Login} isPrivate={false} />} />
-                    <Route path="/register" element={<RouteWrapper defaultComponent={Register} isPrivate={false} />} />
+                    <Route path="/signin" element={<RouteWrapper defaultComponent={Signin} isPrivate={false} />} />
+                    <Route path="/signup" element={<RouteWrapper defaultComponent={Signup} isPrivate={false} />} />
+                    <Route path="/create-client" element={<RouteWrapper defaultComponent={CreateClient} isPrivate={true} />} />
                </Routes>
           </BrowserRouter>
      )

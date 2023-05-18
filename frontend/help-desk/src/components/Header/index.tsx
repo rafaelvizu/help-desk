@@ -1,3 +1,4 @@
+import { FiAlignJustify, FiAlertCircle } from 'react-icons/fi';
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/auth";
 import { Link } from "react-router-dom";
@@ -6,11 +7,10 @@ import { toast } from "react-toastify";
 
 export default function Header()
 {
-     const { user, setToken, token } = useContext(AuthContext);
+     const { user, setToken, token, setUser } = useContext(AuthContext);
 
      async function handleLogout()
      {
-          console.log('logout');
           await api.delete('/user/logout', {
                headers: {
                     Authorization: `Bearer ${token}`
@@ -19,7 +19,9 @@ export default function Header()
           .then(() => {
                localStorage.removeItem('token');
                window.location.href = '/';
-               setToken('');
+               setToken(undefined);
+               setUser(undefined);
+               
                toast.success('logout success');
                return;
           })
@@ -30,12 +32,31 @@ export default function Header()
           });
      }
 
+
      return (
           <div className="navbar-fixed">
-                 <nav className="nav-extended">
+                 <nav className="nav-extended blue">
                     <div className="nav-wrapper">
-                         <a href="#" className="brand-logo">Logo</a>
-                         <a href="#" data-target="mobile-demo" className="sidenav-trigger"><i className="material-icons">menu</i></a>
+                              
+                              {
+                                   user ? (
+                                        <>
+                                             <Link to="/profile" className="brand-logo">
+                                             <img src={user.profileImage} alt="" className="circle responsive-img" width="40" height="40" style={{margin: 10}}/>
+                                             </Link>
+                                        </>
+                                        
+                                        
+                                   ):
+                                   (
+                                        <Link to="/signin" className='brand-logo'>
+                                             <FiAlertCircle size={40} color="#fff" style={{margin: 10}}/>
+                                        </Link>
+                                   )
+                              }
+                         <a href="#" data-target="mobile-demo" className="sidenav-trigger">
+                              <FiAlignJustify size={30} color="#fff" />
+                         </a>
                          <ul id="nav-mobile" className="right hide-on-med-and-down">
                               {
                                    user ? (
@@ -46,12 +67,6 @@ export default function Header()
                                         </>
                                    ) : (
                                         <>
-                                             <li>
-                                                  <Link to="/login">Login</Link>
-                                             </li>
-                                             <li>
-                                                  <Link to="/register">Register</Link>
-                                             </li>
                                         </>
                                    )
                               }
@@ -60,10 +75,34 @@ export default function Header()
                     </div>
                     <div className="nav-content">
                          <ul className="tabs tabs-transparent">
-                         <li className="tab"><a href="#test1">Test 1</a></li>
-                         <li className="tab"><a className="active" href="#test2">Test 2</a></li>
-                         <li className="tab disabled"><a href="#test3">Disabled Tab</a></li>
-                         <li className="tab"><a href="#test4">Test 4</a></li>
+                         {
+                              user ? (
+                                   <>
+                                   <li className="tab">
+                                        <Link to="/">Home</Link>
+                                   </li>
+                                   <li className="tab">
+                                        <Link to="/create-call"
+                                        >Create call</Link>
+                                   </li>
+                                   <li className="tab">
+                                        <Link to="/create-client">Create client</Link>
+                                   </li>
+                                   <li className="tab">
+                                        <Link to="/profile">Profile</Link>
+                                   </li>
+                                   </>
+                              ) : (
+                                   <>
+                                   <li className="tab">
+                                        <Link to="/">Signin</Link>
+                                   </li>
+                                   <li className="tab">
+                                        <Link to="/signup">Signup</Link>
+                                   </li>     
+                                   </>
+                              )  
+                         }
                          </ul>
                     </div>
                     </nav>

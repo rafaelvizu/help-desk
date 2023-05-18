@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../contexts/auth";
-import { getCall } from "../../helpers/call";
-import { ICall } from "../../helpers/interfaces";
+import { AuthContext } from "../../../contexts/auth";
+import { getCall } from "../../../helpers/call";
+import { ICall } from "../../../helpers/interfaces";
 
 function Home()
 {
@@ -11,14 +11,14 @@ function Home()
 
      useEffect(() => {
           getCalls();
-     }, [token, loop]);
+     }, [loop]);
 
      async function getCalls(): Promise<void>
      {
 
           const response = await getCall(token as string);
           setCalls(response);
-          await new Promise((resolve) => setTimeout(resolve, 50000));
+          await new Promise((resolve) => setTimeout(resolve, 10000));
           setLoop(!loop);
           return;
      }

@@ -10,8 +10,15 @@ async function profile(token: string) : Promise<IUser | null>
           },
      })
      .then(response => {
-          const user = response.data.user;
-          return user as IUser;
+          const user = response.data.user as IUser;
+          
+          if (user.profileImage === null)
+          {
+               user.profileImage = `${import.meta.env.VITE_API_URL}/profile.png`;
+          }
+
+          return user;
+          
      })
      .catch(error => {
           console.error(error);
