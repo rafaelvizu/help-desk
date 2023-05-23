@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { formatCep } from '../../../helpers/format-text';
+import { formatCep, formatCnpj, formatCpf, formatPhone } from '../../../helpers/format-text';
 
 function CreateClient()
 {
@@ -47,21 +47,40 @@ function CreateClient()
                               </div>
 
                               <div className="input-field">
-                                   <input type="text" name="cpf" id="cpf" />
+                                   <input type="text" name="cpf" id="cpf"
+                                   onChange={(e) => setCpf(formatCpf(e.target.value))}
+                                   onBlur={(e) => setCpf(formatCpf(e.target.value))}
+                                   value={cpf ?? ''} pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
+                                   />
                                    <label htmlFor="cpf">CPF</label>
                               </div>
 
                               <div className="input-field">
-                                   <input type="text" name="cnpj" id="cnpj" /> 
+                                   <input type="text" name="cnpj" id="cnpj" 
+                                   onChange={(e) => setCnpj(formatCnpj(e.target.value))}
+                                   onBlur={(e) => setCnpj(formatCnpj(e.target.value))}
+                                   value={cnpj ?? ''}
+                                   pattern="\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}"
+                                   /> 
                                    <label htmlFor="cnpj">CNPJ</label>
                               </div>
                               <div className="input-field">
-                                   <input type="text" name="phone_1" id="phone_1" />
+                                   <input type="text" name="phone_1" id="phone_1"
+                                   onChange={(e) => setPhone_1(formatPhone(e.target.value))} 
+                                   onBlur={(e) => setPhone_1(formatPhone(e.target.value))}
+                                   value={phone_1 ?? ''}
+                                   pattern='\(\d{2}\)\s\d{5}\-\d{4}'
+                                   />
                                    <label htmlFor="phone_1">Phone 1</label>
                               </div>
 
                               <div className="input-field">
-                                   <input type="text" name="phone_2" id="phone_2" />
+                                   <input type="text" name="phone_2" id="phone_2" 
+                                   onChange={(e) => setPhone_2(formatPhone(e.target.value))}
+                                   onBlur={(e) => setPhone_2(formatPhone(e.target.value))}
+                                   value={phone_2 ?? ''}
+                                   pattern='\(\d{2}\)\s\d{5}\-\d{4}'
+                                   />
                                    <label htmlFor="phone_2">Phone 2</label>
                               </div>
 
@@ -107,10 +126,11 @@ function CreateClient()
                                    onChange={(e) => {
                                         setCep(formatCep(e.target.value)); 
                                    }}
-
                                    onBlur={(e) => {
                                         setCep(formatCep(e.target.value));
                                    }}
+
+                                   pattern='\d{5}\-\d{3}'
                                    />
                                    
                                    <label htmlFor="cep">CEP</label>
