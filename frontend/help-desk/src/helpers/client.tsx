@@ -17,7 +17,7 @@ export async function createClient(newClient: IClient, token: string) : Promise<
           },   
      })
      .then((response) => {
-          toast.success(`Client ${response.data.name} created successfully!`);
+          toast.success(`Client ${response.data.client.name} created successfully!`);
           return response.data;
      })
      .catch((err) => {

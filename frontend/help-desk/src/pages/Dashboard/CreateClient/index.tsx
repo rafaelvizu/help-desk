@@ -87,7 +87,7 @@ function CreateClient()
                                         setGender(e.target.value);
                                    }}
                                    style={styles.select}
-                                   value={gender ?? ''}  required   
+                                   value={gender ?? ''}   
                                    >
                                         <option value="" disabled selected
                                         >Choose your option</option>
@@ -99,7 +99,7 @@ function CreateClient()
                               <div className="input-field">
                                    <input type="date" name="dateBirth" id="dateBirth"
                                    onChange={(e) => setDateBirth(e.target.value)}
-                                   value={dateBirth ?? ''} required
+                                   value={dateBirth ?? ''}
                                    />
                                    <label htmlFor="dateBirth">Date of Birth</label>
                               </div>
@@ -109,7 +109,7 @@ function CreateClient()
                                    onChange={(e) => setCpf(formatCpf(e.target.value))}
                                    onBlur={(e) => setCpf(formatCpf(e.target.value))}
                                    value={cpf ?? ''}
-                                   max={14} min={14} required
+                                   max={14} min={14}
                                    />
                                    <label htmlFor="cpf">CPF</label>
                               </div>
@@ -118,7 +118,7 @@ function CreateClient()
                                    <input type="text" name="cnpj" id="cnpj" 
                                    onChange={(e) => setCnpj(formatCnpj(e.target.value))}
                                    onBlur={(e) => setCnpj(formatCnpj(e.target.value))}
-                                   value={cnpj ?? ''} required
+                                   value={cnpj ?? ''}
                                    max={18} min={18}
                                    /> 
                                    <label htmlFor="cnpj">CNPJ</label>
@@ -127,7 +127,7 @@ function CreateClient()
                                    <input type="text" name="phone_1" id="phone_1"
                                    onChange={(e) => setPhone_1(formatPhone(e.target.value))} 
                                    onBlur={(e) => setPhone_1(formatPhone(e.target.value))}
-                                   value={phone_1 ?? ''} required
+                                   value={phone_1 ?? ''}
                                    max={15} min={15}
                                    />
                                    <label htmlFor="phone_1">Phone 1</label>
@@ -138,7 +138,7 @@ function CreateClient()
                                    onChange={(e) => setPhone_2(formatPhone(e.target.value))}
                                    onBlur={(e) => setPhone_2(formatPhone(e.target.value))}
                                    value={phone_2 ?? ''}
-                                   max={15} min={15} required
+                                   max={15} min={15}
                                    />
                                    <label htmlFor="phone_2">Phone 2</label>
                               </div>
@@ -146,7 +146,7 @@ function CreateClient()
                               <div className="input-field">
                                    <input type="text" name="email" id="email"
                                    onChange={(e) => setEmail(e.target.value)}
-                                   value={email ?? ''} required
+                                   value={email ?? ''}
                                    />
                                    <label htmlFor="email">Email</label>
                               </div>
@@ -155,7 +155,7 @@ function CreateClient()
                               <div className="input-field">
                                    <input type="text" name="address" id="address" 
                                    onChange={(e) => setAddress(e.target.value)} 
-                                   value={address ?? ''} required
+                                   value={address ?? ''}
                                    />
                                    <label htmlFor="address">Address</label>
                               </div>
@@ -163,7 +163,7 @@ function CreateClient()
                               <div className="input-field">
                                    <input type="number" name="number" id="number" 
                                    onChange={(e) => setNumber(Number(e.target.value))}
-                                   value={number ?? ''} required
+                                   value={number ?? ''}
                                    />
                                    <label htmlFor="number">Number</label>
                               </div>
@@ -171,7 +171,7 @@ function CreateClient()
                               <div className="input-field">
                                    <input type="text" name="complement" id="complement" 
                                    onChange={(e) => setComplement(e.target.value)}
-                                   value={complement ?? ''} required
+                                   value={complement ?? ''}
                                    />
                                    <label htmlFor="complement">Complement</label>
                               </div>
@@ -179,7 +179,7 @@ function CreateClient()
                               <div className="input-field">
                                    <input type="text" name="district" id="district" 
                                    onChange={(e) => setDistrict(e.target.value)}
-                                   value={district ?? ''} required
+                                   value={district ?? ''}
                                    />
                                    <label htmlFor="district">District</label>
                               </div>
@@ -187,17 +187,20 @@ function CreateClient()
                               <div className="input-field">
                                    <input type="text" name="city" id="city" 
                                    onChange={(e) => setCity(e.target.value)}
-                                   value={city ?? ''} required
+                                   value={city ?? ''}
                                    />
                                    <label htmlFor="city">City</label>
                               </div>
 
                               <div className="input-field">
                                    <input type="text"name="state" id="state" 
-                                   onChange={(e) => setState(e.target.value)}
-                                   value={state ?? ''} required
+                                   onChange={(e) => {
+                                        setState(e.target.value.slice(0, 2).toUpperCase());
+                                   }}
+                                   value={state ?? ''} max="2" min="2"
+                              
                                    />
-                                   <label htmlFor="state">State</label>
+                                   <label htmlFor="state">State (UF)</label>
                               </div>
 
                               <div className="input-field">
@@ -209,7 +212,7 @@ function CreateClient()
                                    onBlur={(e) => {
                                         setCep(formatCep(e.target.value));
                                    }}
-                                   max={9} min={9} required
+                                   max={9} min={9}
                                    />
                                    
                                    <label htmlFor="cep">CEP</label>

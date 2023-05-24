@@ -42,7 +42,10 @@ export default function Header()
                                    user ? (
                                         <>
                                              <Link to="/profile" className="brand-logo">
-                                             <img src={user.profileImage} alt="" className="circle responsive-img" width="40" height="40" style={{margin: 10}}/>
+                                             <img src={user.profileImage} alt="" className="circle responsive-img" style={{margin: 10,
+                                             objectFit: 'cover', height: 40, width: 40}}
+                                        
+                                             />
                                              </Link>
                                         </>
                                         
@@ -59,7 +62,7 @@ export default function Header()
                          </a>
                          <ul id="nav-mobile" className="right hide-on-med-and-down">
                               {
-                                   user ? (
+                                   token ? (
                                         <>
                                              <li>
                                                   <a onClick={() => handleLogout()}>Logout</a>
@@ -83,7 +86,7 @@ export default function Header()
                                    </li>
                                    <li className="tab">
                                         <Link to="/create-call"
-                                        >Create call</Link>
+                                        >Clients</Link>
                                    </li>
                                    <li className="tab">
                                         <Link to="/create-client">Create client</Link>

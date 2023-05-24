@@ -17,6 +17,7 @@ async function profile(token: string) : Promise<IUser | null>
                user.profileImage = `${import.meta.env.VITE_API_URL}/profile.png`;
           }
 
+          console.log(user);  
           return user;
           
      })

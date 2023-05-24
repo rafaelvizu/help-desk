@@ -108,8 +108,18 @@ class UserController
           // pega a url da imagem e transforma em base 64
           if (user.profileImage != null)
           {
-               const image = fs.readFileSync(`./uploads/profile-images/${user.profileImage}`).toString('base64');
-               user.profileImage = image;
+               try
+               {
+                    const image = fs.readFileSync(`./uploads/profile-images/${user.profileImage}`)
+                    // deixar a imagem em base 64 para ser exibida no front-end
+                    user.profileImage = image.toString('base64');
+                    user.profileImage = `data:image/png;base64,${user.profileImage}`;
+             
+               }
+               catch (error)
+               {
+                    user.profileImage = null;
+               }
           }
 
           return res.status(200).json({ message: 'profile', user });          
@@ -171,8 +181,15 @@ class UserController
 
                if (profileImage.profileImage != null)
                {
-                    // deletar imagem antiga
-                    fs.unlinkSync(`./uploads/profile-images/${profileImage.profileImage}`);
+                    try
+                    {
+                         // deletar imagem antiga
+                         fs.unlinkSync(`./uploads/profile-images/${profileImage.profileImage}`);
+                    }
+                    catch (error)
+                    {
+                         console.error(error);
+                    }
                }
 
                await User.update(upd, {

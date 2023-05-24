@@ -23,7 +23,17 @@ const styles = {
           backgroundColor: '#fff', 
           cursor: 'pointer',   
      },
-     
+     labeLImage: {
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          cursor: 'pointer',
+     },
+     profileIcon: {
+          opacity: 0.5,
+          position: 'absolute',
+          cursor: 'pointer',
+     },
           
 };
 
