@@ -25,7 +25,7 @@ const registerSchema = Joi.object({
 
 const clientSchema = Joi.object({
      name: Joi.string().min(3).max(255).trim().required(),
-     gender: Joi.string().valid('M', 'F', 'N/1'),
+     gender: Joi.string().valid('M', 'F', 'N/A'),
      dateBirth: Joi.date(),
      address: Joi.string().min(1).max(100).trim(),
      number: Joi.number().integer(),
