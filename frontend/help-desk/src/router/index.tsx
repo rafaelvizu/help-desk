@@ -7,6 +7,7 @@ import Signup from '../pages/Auth/Signup';
 import Home from '../pages/Dashboard/Home';
 import Profile from '../pages/Dashboard/Profile';
 import CreateClient from '../pages/Dashboard/CreateClient';
+import Clients from '../pages/Dashboard/Clients';
 
 
 // components
@@ -26,6 +27,8 @@ export default function Router()
                     <Route path="/signin" element={<RouteWrapper defaultComponent={Signin} isPrivate={false} />} />
                     <Route path="/signup" element={<RouteWrapper defaultComponent={Signup} isPrivate={false} />} />
                     <Route path="/create-client" element={<RouteWrapper defaultComponent={CreateClient} isPrivate={true} />} />
+                    <Route path="/clients" element={<RouteWrapper defaultComponent={Clients} isPrivate={true} />} />
+
                </Routes>
           </BrowserRouter>
      )

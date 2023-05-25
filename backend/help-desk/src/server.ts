@@ -61,7 +61,7 @@ class Server
      {
           this.App.listen(this.App.get('port'), this.App.get('ip'), () => {
                console.log(`Server running on http://${this.App.get('ip')}:${this.App.get('port')}`);
-          })
+          });
      }
 }
 

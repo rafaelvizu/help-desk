@@ -27,6 +27,11 @@ export interface IAuthContextData
      setUser: React.Dispatch<React.SetStateAction<IUser | undefined>>;
 }
 
+export interface IClientContextData
+{
+     clients: IClient[];
+}
+
 export interface ICall 
 {
      id: number;

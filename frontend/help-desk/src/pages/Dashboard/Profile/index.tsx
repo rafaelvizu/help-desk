@@ -8,13 +8,16 @@ import api from "../../../services/api";
 
 function Profile()
 {
-     const { user, setUser, token} = useContext(AuthContext);
+     const { user, setUser, token } = useContext(AuthContext);
      const [profileImage, setProfileImage] = useState<string>('');
      const [profileImageFile, setProfileImageFile] = useState<File>();
-     const [name, setName] = useState<string>('');
+     const [name, setName] = useState<string | null>(null);
      const [email, setEmail] = useState<string>('');
+     const [password, setPassword] = useState<string | null>(null);
+     const [confirmPassword, setConfirmPassword] = useState<string | null>(null);
 
      const [editPassword, setEditPassword] = useState<boolean>(false);
+     const [blockButton, setBlockButton] = useState<boolean>(false);
      
      
      useEffect(() => {
@@ -37,11 +40,33 @@ function Profile()
 
      async function handleEditUser()
      {
+          setBlockButton(true);
+
+          // verificar se os dados são iguais
+          if (name === user?.name && !profileImageFile && !editPassword) {
+               toast.info('No changes were made');
+               setBlockButton(false);
+               return;
+          } else if (editPassword && password !== confirmPassword) {
+               toast.error('Passwords do not match');
+               setBlockButton(false);
+               return;
+          } else if (editPassword && password?.length as number < 6) {
+               toast.error('Password must be at least 6 characters');
+               setBlockButton(false);
+               return;
+          }
+
           const formData = new FormData();
-          formData.append('name', name);
+          formData.append('name', name as string);
           
           if (profileImageFile) {
                formData.append('profileImage', profileImageFile);
+          }
+
+          if (editPassword && password && confirmPassword) {
+               formData.append('password', password as string);
+               formData.append('confirmPassword', confirmPassword as string);
           }
 
           await api.put('/user/update-profile', formData, {
@@ -55,15 +80,23 @@ function Profile()
                if (user) {
                     setProfileImageFile(undefined);
                     setUser(user);
+                    setEditPassword(false);
+                    setPassword(null);
+                    setConfirmPassword(null);
                }
           })
           .catch(error => {
                setProfileImageFile(undefined);
                setName(user?.name as string);
                setProfileImage(user?.profileImage as string);
+               setEditPassword(false);
+               setPassword(null);
+               setConfirmPassword(null);
                toast.error(error.response.data.message);
                console.error(error);
           });
+
+          setBlockButton(false);
      }
 
      return (
@@ -89,7 +122,7 @@ function Profile()
                                    </div>
                                    <div className="input-field">
                                         <input type="text" id="name"
-                                        placeholder="Nome" value={name}
+                                        placeholder="Nome" value={name as string}
                                         onChange={event => setName(event.target.value)}
                                         />
                                         <label htmlFor="name">Name</label>
@@ -108,29 +141,30 @@ function Profile()
                               {
                               editPassword &&
                               <div className="col s12 m12" style={{marginTop: 20}}>
-                                   <div className="input-field">
-                                        <input type="password" id="password"
-                                        />
-                                        <label htmlFor="password">Old password</label>
-                                   </div>
-
+                                   
                                    <div className="input-field">
                                         <input type="password" id="newPassword" 
+                                        value={password as string}
+                                        onChange={event => setPassword(event.target.value)}
                                    />
                                    <label htmlFor="newPassword">New password</label>
                                    </div>
 
                                    <div className="input-field">
                                         <input type="password" id="confirmPassword"
+                                        value={confirmPassword as string}
+                                        onChange={event => setConfirmPassword(event.target.value)}
                                    />
-                                   <label htmlFor="confirmPassword">Confirm password</label>
+                                   <label htmlFor="confirmPassword">New confirm password</label>
                                    </div>
                               </div>     
                               }
                               
                               <div className="col s12 m12">
                                    <div className="input-field">
-                                        <button className="btn waves-effect waves-light left">
+                                        <button className="btn waves-effect waves-light left "
+                                        disabled={blockButton}
+                                        onClick={handleEditUser}>
                                              Save
                                         </button>
                                    </div>

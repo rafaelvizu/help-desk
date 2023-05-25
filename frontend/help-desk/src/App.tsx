@@ -4,6 +4,7 @@ import 'materialize-css/dist/js/materialize.min.js';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import AuthProvider from './contexts/auth';
+import ClientProvider from './contexts/clients';
 
 
 import Router from './router';
@@ -13,8 +14,10 @@ function App() {
 
   return (
     <AuthProvider>  
-      <Router />
-      <ToastContainer />
+      <ClientProvider>
+        <Router />
+        <ToastContainer />
+      </ClientProvider>
     </AuthProvider>
   );
 }

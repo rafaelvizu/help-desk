@@ -137,7 +137,7 @@ class UserController
 
           const upd = {} as IUserUpdate
           // validar dados
-          if (password || confirmPassword)
+          if (password && confirmPassword)
           {
                const validate = validatePassword(password, confirmPassword);
                if (validate !== null) return res.status(422).json({ message: validate });
@@ -145,11 +145,14 @@ class UserController
                .catch((error) => {
                     console.error(error);
                     return undefined;
-               })
+               });
 
                if (hash === undefined) return res.status(500).json({ message: 'internal server error' });
 
                upd.password = hash;
+          } else if (password || confirmPassword)
+          {
+               return res.status(422).json({ message: 'password and confirm password are required' });
           }
 
           if (name)
@@ -163,50 +166,54 @@ class UserController
           if (req.file)
           {
                upd.profileImage = req.file.filename;
-          }
-
-          
-          try
-          {
-               const profileImage = await User.findOne({
-                    where: {
-                         id,
-                         email,
-                    },
-                    attributes: ['profileImage'],
-                    raw: true,
-               }) as any;
-
-               if (profileImage === null) return res.status(404).json({ message: 'user not found' });
-
-               if (profileImage.profileImage != null)
+               try 
                {
-                    try
-                    {
-                         // deletar imagem antiga
-                         fs.unlinkSync(`./uploads/profile-images/${profileImage.profileImage}`);
-                    }
-                    catch (error)
-                    {
-                         console.error(error);
-                    }
-               }
+                    // deletar a imagem antiga
+                    const profileImage = await User.findOne({
+                         where: {
+                              id,
+                              email,
+                         },
+                         attributes: ['profileImage'],
+                         raw: true,
+                    }) as any;
 
-               await User.update(upd, {
-                    where: {
-                         id,
-                         email,
-                    },
-               })
-               .then(() => {
-                    return res.status(200).json({ message: 'profile updated' });
-               });
+                    if (profileImage === null) return res.status(404).json({ message: 'user not found' });
+
+                    if (profileImage.profileImage != null)
+                    {
+                         try
+                         {
+                              // deletar imagem antiga
+                              fs.unlinkSync(`./uploads/profile-images/${profileImage.profileImage}`);
+                         }
+                         catch (error)
+                         {
+                              console.log('error to delete image: ', profileImage.profileImage);
+                         }
+                    }  
+               }
+               catch (error)
+               {
+                    console.error(error);
+                    return res.status(500).json({ message: 'internal server error' });
+               }
           }
-          catch (error)  
-          {
+
+          await User.update(upd, {
+               where: {
+                    id,
+                    email,
+               },
+          })
+          .then(() => {
+               return res.status(200).json({ message: 'profile updated' });
+          })
+          .catch((error) => {
                console.error(error);
                return res.status(500).json({ message: 'internal server error' });
-          }
+          });
+          
 
           return res.end();
      }
