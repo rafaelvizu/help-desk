@@ -11,22 +11,22 @@ export default function Header()
 
      async function handleLogout()
      {
+          localStorage.removeItem('token');
+          window.location.href = '/';
+          setToken(undefined);
+          setUser(undefined);
+
           await api.delete('/user/logout', {
                headers: {
                     Authorization: `Bearer ${token}`
                },
           })
           .then(() => {
-               localStorage.removeItem('token');
-               window.location.href = '/';
-               setToken(undefined);
-               setUser(undefined);
-               
                toast.success('logout success');
                return;
           })
           .catch((err) => {
-               toast.error('logout error');
+               toast.error('logout incomplete');
                console.log(err.response.data);
                return;
           });

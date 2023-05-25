@@ -8,6 +8,7 @@ export default async function login(data: ILogin) : Promise<string | null>
      .then(response => {
           const { token } = response.data;
           localStorage.setItem('token', token);
+          window.location.href = '/';
           return token;
      })
      .catch(error => {

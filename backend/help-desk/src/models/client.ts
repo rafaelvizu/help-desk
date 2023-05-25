@@ -42,7 +42,7 @@ const Client = dbConn.define('client', {
            allowNull: true,
      },
      cep: {
-          type: DataTypes.STRING(7),
+          type: DataTypes.STRING(8),
           allowNull: true,    
      },
      phone_1: {

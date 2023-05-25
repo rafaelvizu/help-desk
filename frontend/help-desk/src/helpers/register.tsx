@@ -8,6 +8,7 @@ export default async function register(data: IRegister) : Promise<string | null>
      .then(response => {
           const { token } = response.data;
           localStorage.setItem('token', token);
+          window.location.href = '/';
           return token;
      })
      .catch(error => {

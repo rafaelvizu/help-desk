@@ -28,7 +28,7 @@ export function formatPhone(phone: string)
 }
 
 
-export function onlyNumbers(value: string)
+export function onlyNumbers(value: string) : string
 {
      return value.replace(/\D/g, '');
 }

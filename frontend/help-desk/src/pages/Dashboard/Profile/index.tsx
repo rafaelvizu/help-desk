@@ -122,7 +122,7 @@ function Profile()
                                    </div>
                                    <div className="input-field">
                                         <input type="text" id="name"
-                                        placeholder="Nome" value={name as string}
+                                        placeholder="Nome" value={name ?? ''}
                                         onChange={event => setName(event.target.value)}
                                         />
                                         <label htmlFor="name">Name</label>
@@ -144,7 +144,7 @@ function Profile()
                                    
                                    <div className="input-field">
                                         <input type="password" id="newPassword" 
-                                        value={password as string}
+                                        value={password ?? ''}
                                         onChange={event => setPassword(event.target.value)}
                                    />
                                    <label htmlFor="newPassword">New password</label>
@@ -152,7 +152,7 @@ function Profile()
 
                                    <div className="input-field">
                                         <input type="password" id="confirmPassword"
-                                        value={confirmPassword as string}
+                                        value={confirmPassword ?? ''}
                                         onChange={event => setConfirmPassword(event.target.value)}
                                    />
                                    <label htmlFor="confirmPassword">New confirm password</label>

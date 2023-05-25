@@ -1,13 +1,18 @@
-import { useState } from 'react';
-import { formatCep, formatCnpj, formatCpf, formatPhone } from '../../../helpers/format-text';
+import { useState, useEffect } from 'react';
+import { formatCep, formatCnpj, formatCpf, formatPhone, onlyNumbers } from '../../../helpers/format-text';
 import styles from '../../../helpers/styles';
-import { createClient } from '../../../helpers/client';
+import { deleteClient, getClient, updateClient } from '../../../helpers/client';
 import { IClient } from '../../../helpers/interfaces';
 import { useContext } from 'react';
 import { AuthContext } from '../../../contexts/auth';
+import { useParams } from 'react-router-dom';
+import Loading from '../../../components/Loading';
+import Error from '../../../components/Error';
 
-function CreateClient()
+function ShowClient()
 {
+     const { id } = useParams<{ id: string }>();
+
      const { token } = useContext(AuthContext);
      const [name, setName] = useState<string>('');
      const [gender, setGender] = useState<string | null>(null);
@@ -25,58 +30,113 @@ function CreateClient()
      const [state, setState] = useState<string | null>(null);
      const [cep, setCep] = useState<string | null>(null);
 
+     const [error, setError] = useState<boolean>(false);
+     const [loading, setLoading] = useState<boolean>(true);
+
+     useEffect(() => {
+          if (token)
+          {
+               clientData();
+          }          
+     }, [token]);
+
+
+     async function clientData()
+     {
+          setLoading(true);
+          setError(false);
+
+          const client: IClient | null = await getClient(id as string, token as string);
+
+          if (client === null)
+          {
+               setError(true);
+               setLoading(false);
+               return; 
+          }
+
+          setName(client.name);
+          setGender(client.gender);
+          setDateBirth(client.dateBirth);
+          client.cpf && setCpf(formatCpf(client.cpf as string));
+          client.cnpj && setCnpj(formatCnpj(client.cnpj as string));
+          client.phone_1 && setPhone_1(formatPhone(client.phone_1 as string));
+          client.phone_2 && setPhone_2(formatPhone(client.phone_2 as string));
+          setEmail(client.email);
+          setAddress(client.address);
+          setNumber(client.number);
+          setComplement(client.complement);
+          setDistrict(client.district);
+          setCity(client.city);
+          setState(client.state);
+          client.cep && setCep(formatCep(client.cep as string));           
+
+          setLoading(false);
+
+          return;
+     }
+
+
      async function handleSubmit(e: React.FormEvent<HTMLFormElement>)
      {    	
           e.preventDefault();
-          const client: IClient | null = await createClient({
+          setLoading(true);   
+
+   
+          const clientUpd: IClient = {
                name,
                gender,
                dateBirth,
-               cpf,
-               cnpj,
-               phone_1,
-               phone_2,
+               cpf: cpf != null ? onlyNumbers(cpf as string) : null,
+               cnpj: cnpj != null ? onlyNumbers(cnpj as string) : null,  
+               phone_1: phone_1 ? onlyNumbers(phone_1 as string) : null,
+               phone_2: phone_2 != null? onlyNumbers(phone_2 as string) : null,
                email,
                address,
                number,
                complement,
                district,
-               city,     
+               city,
                state,
-               cep
-          }, token as string);
-
-          if(client)
-          {
-               setName('');
-               setGender(null);
-               setDateBirth(null);
-               setCpf(null);
-               setCnpj(null);
-               setPhone_1(null);
-               setPhone_2(null);
-               setEmail(null);
-               setAddress(null);
-               setNumber(null);
-               setComplement(null);
-               setDistrict(null);
-               setCity(null);
-               setState(null);
-               setCep(null);
-
-               await Promise.all([
-                    new Promise((resolve) => setTimeout(resolve, 1000)),
-               ]);
-
-               window.location.href = `/clients/${client.id}`;
+               cep: cep != null ? onlyNumbers(cep as string) : null,
           }
+
+
+          await updateClient(id as string, clientUpd, token as string);
+          setLoading(false);
+
      }
 
 
+     async function handleDelete()
+     {     
+          setLoading(true);
+          const del = await deleteClient(id as string, token as string);
+
+          if (del)
+          {
+               window.location.href = '/clients';
+               return;
+          }
+
+          setLoading(false);
+     }
+
+     if (loading)
+     {
+          return <Loading/>
+     }
+
+     if (error)
+     {
+          return <Error/>
+     }
 
      return (
           <main className="container">
-               <h3>Create Client</h3>
+               <h3>
+                    Show Client
+               </h3>
                <hr/>
                <form className="row" onSubmit={(e) => handleSubmit(e)}>
                     <div className="row">
@@ -97,7 +157,7 @@ function CreateClient()
                                    style={styles.select}
                                    value={gender ?? ''}   
                                    >
-                                        <option value="" disabled 
+                                        <option value="" disabled
                                         >Choose your option</option>
                                         <option value="M">Male</option>
                                         <option value="F">Female</option>
@@ -232,7 +292,10 @@ function CreateClient()
 
                     <div className="row">
                          <button className="btn-large waves-effect waves-light" type="submit" name="action">
-                              Create Client
+                              Save
+                         </button>
+                         <button className="btn-large waves-effect waves-light red right" type="button" name="action" onClick={() => handleDelete()}>
+                              Delete
                          </button>
                     </div>
 
@@ -242,4 +305,4 @@ function CreateClient()
 }
 
 
-export default CreateClient;
+export default ShowClient;
