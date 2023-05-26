@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { formatCep, formatCnpj, formatCpf, formatPhone, onlyNumbers } from '../../../helpers/format-text';
+import { formatCep, formatCnpj, formatCpf, formatDate, formatPhone, onlyNumbers } from '../../../helpers/format-text';
+import { Link } from 'react-router-dom';
 import styles from '../../../helpers/styles';
 import { deleteClient, getClient, updateClient } from '../../../helpers/client';
 import { IClient } from '../../../helpers/interfaces';
@@ -54,10 +55,8 @@ function ShowClient()
                setLoading(false);
                return; 
           }
-
           setName(client.name);
-          setGender(client.gender);
-          setDateBirth(client.dateBirth);
+          client.dateBirth && setDateBirth(formatDate(client.dateBirth as string));
           client.cpf && setCpf(formatCpf(client.cpf as string));
           client.cnpj && setCnpj(formatCnpj(client.cnpj as string));
           client.phone_1 && setPhone_1(formatPhone(client.phone_1 as string));
@@ -81,7 +80,6 @@ function ShowClient()
      {    	
           e.preventDefault();
           setLoading(true);   
-
    
           const clientUpd: IClient = {
                name,
@@ -138,6 +136,18 @@ function ShowClient()
                     Show Client
                </h3>
                <hr/>
+               <div className="row">
+                    <div className="col s6 m6">
+                         <Link to={`/clients/${id}/create-call`} className="btn blue darken-4 left-align">
+                              Create call
+                         </Link>
+                    </div>
+                    <div className="col s6 m6 right-align">
+                         <button className="btn green darken-4">
+                              Show calls
+                         </button>
+                    </div>
+               </div>
                <form className="row" onSubmit={(e) => handleSubmit(e)}>
                     <div className="row">
                          <div className="col s12 m6">

@@ -42,8 +42,8 @@ const clientSchema = Joi.object({
 });
 
 const callSchema = Joi.object({
-     subject: Joi.string().valid('SUPORTE', 'VISITA TÉCNICA', 'FINANCEIRO', 'OUTROS').required(),
-     status: Joi.string().valid('ABERTO', 'EM PROGRESSO', 'ATENDIDO').required(),
+     subject: Joi.string().valid('TECHNICAL SUPPORT', 'FINANCIAL', 'GENERAL').required(),
+     status: Joi.string().valid('OPEN', 'IN PROGRESS', 'CLOSED').required(),
      complement: Joi.string().min(1).max(255).trim().required(),
      clientId: Joi.number().integer().required(),
 });

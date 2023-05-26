@@ -65,7 +65,7 @@ function CreateClient()
                setCep(null);
 
                await Promise.all([
-                    new Promise((resolve) => setTimeout(resolve, 1000)),
+                    new Promise((resolve) => setTimeout(resolve, 100)),
                ]);
 
                window.location.href = `/clients/${client.id}`;

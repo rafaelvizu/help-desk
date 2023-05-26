@@ -22,24 +22,24 @@ export default function ClientProvider(props: { children: ReactNode; })
 
      async function getClients()
      {
-          await api.get('/client', {
+          while (token) {
+               await api.get('/client', {
                headers: {
                     Authorization: `Bearer ${token}`,
                },
-          })
-          .then(response => {
-               setClients(response.data.clients);               
-          })
-          .catch(error => {
-               toast.error('error to get clients');
-               console.log(error);
-          });
-          await Promise.all([
-               new Promise(resolve => setTimeout(resolve, 10000))
-          ]);
+               })
+               .then(response => {
+                    setClients(response.data.clients);               
+               })
+               .catch(error => {
+                    toast.error('error to get clients');
+                    console.log(error);
+               });
+               await Promise.all([
+                    new Promise(resolve => setTimeout(resolve, 10000))
+               ]);
+          }
           
-          return getClients();
-
      }
 
      return ( 

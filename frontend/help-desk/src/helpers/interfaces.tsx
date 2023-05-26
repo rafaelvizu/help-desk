@@ -34,10 +34,13 @@ export interface IClientContextData
 
 export interface ICall 
 {
-     id: number;
+     id?: number;
      subject: string;
      status: string;
      complement: string;
+     clientId: number;
+     createdAt?: string;
+     updatedAt?: string;
 }
 
 

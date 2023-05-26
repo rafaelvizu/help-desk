@@ -32,3 +32,8 @@ export function onlyNumbers(value: string) : string
 {
      return value.replace(/\D/g, '');
 }
+
+export function formatDate(date: string)
+{    
+     return new Date(date).toISOString().slice(0, 10);
+}

@@ -6,11 +6,11 @@ import User from "./user";
 
 const Call = dbConn.define('call', {
      subject: {
-          type: DataTypes.ENUM('SUPORTE', 'VISITA TÉCNICA', 'FINANCEIRO', 'OUTROS'),
+          type: DataTypes.ENUM('TECHNICAL SUPPORT', 'FINANCIAL', 'GENERAL'),
           allowNull: false,
      },
      status: {
-          type: DataTypes.ENUM('ABERTO', 'EM PROGRESSO', 'ATENDIDO'),
+          type: DataTypes.ENUM('OPEN', 'IN PROGRESS', 'CLOSED'),
           allowNull: false,
      },
      complement: {
