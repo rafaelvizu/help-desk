@@ -1,96 +1,103 @@
-import { useState, useEffect } from 'react';
-import styles from '../../../helpers/styles';
-import { getClient } from '../../../helpers/client';
-import { IClient } from '../../../helpers/interfaces';
-import { useContext } from 'react';
-import { AuthContext } from '../../../contexts/auth';
-import { useParams } from 'react-router-dom';
-import Loading from '../../../components/Loading';
-import Error from '../../../components/Error';
-import { createCall } from '../../../helpers/call';
+import { useParams } from "react-router-dom";
+import { CallContext } from "../../../contexts/calls";
+import { useContext, useState, useEffect } from "react";
+import { ClientContext } from "../../../contexts/clients";
+import styles from "../../../helpers/styles";
+import { deleteCall, updateCall } from "../../../helpers/call";
+import { AuthContext } from "../../../contexts/auth";
+import Loading from "../../../components/Loading";
 
-function CreateCall()
+function ShowCall()
 {
-     const { id } = useParams<{ id: string }>();
+     const { id } = useParams();
+     const { id_call } = useParams();
+     const { calls } = useContext(CallContext);
+     const { clients } = useContext(ClientContext);
      const { token } = useContext(AuthContext);
 
-     const [clientName, setClientName] = useState<string>('');
      const [subject, setSubject] = useState<string>('');
      const [status, setStatus] = useState<string>('');
      const [complement, setComplement] = useState<string>('');
+     const [clientName, setClientName] = useState<string>('');
 
-     
-     const [error, setError] = useState<boolean>(false);
-     const [loading, setLoading] = useState<boolean>(true);
+     const [loading, setLoading] = useState<boolean>(false);
 
      useEffect(() => {
-          if (token)
-          {
-               clientData();
-          }          
-     }, [token]);
-
-
-     async function clientData()
-     {
           setLoading(true);
-          setError(false);
-
-          const client: IClient | null = await getClient(id as string, token as string);
-
-          if (client === null)
+          if (id_call && id && calls)
           {
-               setError(true);
-               setLoading(false);
-               return; 
+               const call = calls.find(call => call.id == id_call);
+               if (call)
+               {
+                    setSubject(call.subject);
+                    setStatus(call.status);
+                    setComplement(call.complement);
+               }
+
+               const client = clients.find(client => client.id == id);
+               if (client)
+               {
+                    setClientName(client.name);
+               }
           }
 
-          setClientName(client.name); 
           setLoading(false);
-     }
+     }, [id_call, id, calls, clients]);
 
 
-     async function handleSubmit(e: React.FormEvent<HTMLFormElement>)
-     {    	
-          e.preventDefault();
+     async function handleDelete()
+     {
           setLoading(true);
 
-          const create = await createCall({
+          const del = await deleteCall(id_call as string, token as string);
+
+          setLoading(false);
+          if (del)
+          {
+               window.location.href = `/`;
+          }
+          
+     }
+
+     async function handleSubmit(e: React.FormEvent<HTMLFormElement>)
+     {
+          setLoading(true);
+          e.preventDefault();
+
+          await updateCall({
                subject,
                status,
                complement,
                clientId: id as string,
-          }, token as string);
+          }, id_call as string, token as string);
 
-          if (create === null)
-          {
-               setLoading(false);
-               return;
-          }
           setLoading(false);
-          window.location.href = `/call/${create.id}`;
      }
-
-
 
      if (loading)
      {
-          return <Loading/>
+          return <Loading />
      }
 
-     if (error)
-     {
-          return <Error/>
-     }
 
      return (
           <main className="container">
-               <h3>
-                    Create call
-               </h3>
+               <div className="row">
+                    <div className="col s12 m6">
+                         <h3 className="light align-center">Call</h3>
+                    </div>
+               </div>
+
                <hr/>
                <form className="row" onSubmit={(e) => handleSubmit(e)}>
                     <div className="row">
+                         <div className="col s12 m12">
+                              <button className="btn waves-effect waves-light col m6 s6 red" type="submit" name="action"
+                              onClick={() => handleDelete()}
+                              >
+                                   Delete
+                              </button>
+                         </div>
                          <div className="col s12 m6">
                               <div className="input-field">
                                    
@@ -103,7 +110,7 @@ function CreateCall()
                                         value={subject} style={styles.select}
                                         onChange={(e) => setSubject(e.target.value)}
                                    >
-                                        <option value="" disabled>Choose a subject</option>
+                                        <option value  ="" disabled>Choose a subject</option>
                                         <option value="TECHNICAL SUPPORT">Technical support</option>
                                         <option value="FINANCIAL">Financial</option>
                                         <option value="GENERAL">General</option>
@@ -124,16 +131,16 @@ function CreateCall()
                               <div className="input-field">
                                    <textarea id="complement" className="materialize-textarea"
                                    onChange={(e) => setComplement(e.target.value)}
-                                   placeholder='Complement'
-                                   >{complement}</textarea>
+                                   placeholder='Complement' value={complement}
+                                   ></textarea>
                               </div>
                          </div>
 
                     </div>
 
                     <div className="row">
-                         <button className="btn-large waves-effect waves-light" type="submit" name="action">
-                              Create call
+                         <button className="btn-large waves-effect waves-light col m6 s6" type="submit" name="action">
+                              Save
                          </button>
                     </div>
 
@@ -143,4 +150,4 @@ function CreateCall()
 }
 
 
-export default CreateCall;
+export default ShowCall;

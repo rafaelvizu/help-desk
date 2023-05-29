@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import AuthProvider from './contexts/auth';
 import ClientProvider from './contexts/clients';
+import CallProvider from './contexts/calls';
 
 
 import Router from './router';
@@ -15,8 +16,12 @@ function App() {
   return (
     <AuthProvider>  
       <ClientProvider>
-        <Router />
-        <ToastContainer />
+        <CallProvider>
+
+          <Router />
+          <ToastContainer />
+          
+        </CallProvider>
       </ClientProvider>
     </AuthProvider>
   );

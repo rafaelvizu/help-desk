@@ -51,3 +51,38 @@ export async function createCall(call: ICall, token: string, ) : Promise<ICall |
           return null
      });
 }
+
+export async function updateCall(call: ICall, id: string,  token: string) : Promise<ICall | null>
+{
+     console.log(call, id, token);
+     return await api.put(`/call/update/${id}`, call, {
+          headers: {
+               Authorization: `Bearer ${token}`,
+          },
+     })
+     .then((response) => {
+          toast.success(response.data.message);
+          return response.data.call as ICall;
+     })
+     .catch((err) => {
+          toast.error(err.response.data.message);
+          return null
+     });
+}
+
+export async function deleteCall(id: string, token: string) : Promise<boolean>
+{
+     return await api.delete(`/call/delete/${id}`, {
+          headers: {
+               Authorization: `Bearer ${token}`,
+          },
+     })
+     .then((response) => {
+          toast.success(response.data.message);
+          return true;
+     })
+     .catch((err) => {
+          toast.error(err.response.data.message);
+          return false;
+     });
+}

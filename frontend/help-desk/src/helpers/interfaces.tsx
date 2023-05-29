@@ -32,13 +32,18 @@ export interface IClientContextData
      clients: IClient[];
 }
 
+export interface ICallContextData
+{
+     calls: ICall[];
+}
+
 export interface ICall 
 {
-     id?: number;
+     id?: string;
      subject: string;
      status: string;
      complement: string;
-     clientId: number;
+     clientId: string;
      createdAt?: string;
      updatedAt?: string;
 }
@@ -46,7 +51,7 @@ export interface ICall
 
 export interface IClient
 {
-     id?: number;
+     id?: string;
      name: string;
      gender: string | null;
      dateBirth: string | null;

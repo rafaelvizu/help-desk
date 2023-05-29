@@ -62,14 +62,15 @@ class CallController
           }
 
           try
-          {
+          {    
                // upd do chamado
                const upd = await Call.update(validate, { 
                     where: { 
                          id,
+                         clientId: validate.clientId,
                          userId,
                     } 
-               });
+               }) as any
 
                if (upd[0] === 0) return res.status(404).json({ message: 'call not found' });
 

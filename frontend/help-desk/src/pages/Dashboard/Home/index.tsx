@@ -1,38 +1,52 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../../contexts/auth";
-import { getCall } from "../../../helpers/call";
-import { ICall } from "../../../helpers/interfaces";
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import { FiEdit, FiAlertCircle, FiEye, FiEyeOff } from "react-icons/fi";
+import { CallContext } from "../../../contexts/calls";
 
 function Home()
 {
-     const { token } = useContext(AuthContext);
-     const [loop, setLoop] = useState<boolean>(true); 
-     const [calls, setCalls] = useState<ICall[]>([])
+     const { calls } = useContext(CallContext);
 
-     useEffect(() => {
-          getCalls();
-     }, [loop]);
-
-     async function getCalls(): Promise<void>
-     {
-
-          const response = await getCall(token as string);
-          setCalls(response);
-          await new Promise((resolve) => setTimeout(resolve, 10000));
-          setLoop(!loop);
-          return;
-     }
 
      return (
-          <div>
-               <main>
+          <div className="container">
+               <main className="row">
                     {
                          calls.map((call) => {
-                              return (
-                                   <div key={call.id}>
-                                        <h1>{call.subject}</h1>
-                                        <h2>{call.status}</h2>
-                                        <p>{call.complement}</p>
+                              return (                              
+                                   <div className="col m12 s12 hoverable" key={call.id} style={{
+                                        padding: 20,
+                                   }}>
+                                        <div className="row">
+                                             <h4 className="col m6 s6 ">
+                                                  {call.subject}
+                                             </h4>
+                                             <p title={call.status} className="col m6 s6 right-align">
+                                                  {call.status === 'OPEN' && <FiAlertCircle size={50} />} 
+                                                  {call.status === 'CLOSED' && <FiEyeOff size={50} />}
+                                                  {call.status === 'IN PROGRESS' && <FiEye size={50}/>}     
+                                             </p>
+                                        
+                                        </div>  
+
+                                        <div className="row">
+                                             <p className="col m6 s6">
+                                                  {call.complement.slice(0, 50)}...
+                                             </p>
+                                             <Link to={`/clients/${call.clientId}/calls/${call.id}`}className="btn btn-primary col m3 s3 right">
+                                                  <FiEdit />
+                                             </Link>
+                                        </div>
+
+                                        <div className="row">
+                                             <span className="col m6 s6">
+                                                  created at: {new Date(call.createdAt as string).toLocaleString()}
+                                             </span>
+                                             <span className="col m6 s6 right-align">
+                                                  updated at: {new Date(call.updatedAt as string).toLocaleString()}     
+                                             </span>
+                                        </div>
+
                                    </div>
                               )
                          })
