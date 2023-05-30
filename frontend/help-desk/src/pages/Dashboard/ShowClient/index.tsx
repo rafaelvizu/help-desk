@@ -143,9 +143,9 @@ function ShowClient()
                          </Link>
                     </div>
                     <div className="col s6 m6 right-align">
-                         <button className="btn green darken-4">
+                         <Link className="btn green darken-4" to={`/clients/${id}/calls`}>
                               Show calls
-                         </button>
+                         </Link>
                     </div>
                </div>
                <form className="row" onSubmit={(e) => handleSubmit(e)}>

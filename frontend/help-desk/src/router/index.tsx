@@ -36,6 +36,7 @@ export default function Router()
                     <Route path="/clients/:id" element={<RouteWrapper defaultComponent={ShowClient} isPrivate={true} />} />
                     <Route path="/clients/:id/create-call" element={<RouteWrapper defaultComponent={CreateCall} isPrivate={true} />} />
                     <Route path="/clients/:id/calls/:id_call" element={<RouteWrapper defaultComponent={ShowCall} isPrivate={true} />} />
+                    <Route path='/clients/:id/calls' element={<RouteWrapper defaultComponent={Home} isPrivate={true} />} />
                     
                     <Route path="*" element={<RouteWrapper defaultComponent={Error} isPrivate={false} />} />
 

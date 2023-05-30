@@ -19,7 +19,7 @@ export async function getCall(token: string) : Promise<ICall[]>
      });
 }
 
-export async function getCallById(id: number, token: string) : Promise<ICall>
+export async function getCallById(id: string, token: string) : Promise<ICall | null>
 {
      return await api.get(`/call/${id}`, {
           headers: {
@@ -27,11 +27,11 @@ export async function getCallById(id: number, token: string) : Promise<ICall>
           },
      })
      .then((response) => {
-          return response.data as ICall;
+          return response.data.call as ICall;
      })
      .catch((err) => {
           console.log(err);
-          return {} as ICall;
+          return null
      });
 }
 

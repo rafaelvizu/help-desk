@@ -68,7 +68,8 @@ function CreateCall()
                return;
           }
           setLoading(false);
-          window.location.href = `/call/${create.id}`;
+
+          window.location.href = `/clients/${id}/calls/${create.id}`;
      }
 
 
@@ -124,8 +125,8 @@ function CreateCall()
                               <div className="input-field">
                                    <textarea id="complement" className="materialize-textarea"
                                    onChange={(e) => setComplement(e.target.value)}
-                                   placeholder='Complement'
-                                   >{complement}</textarea>
+                                   placeholder='Complement' value={complement}
+                                   ></textarea>
                               </div>
                          </div>
 

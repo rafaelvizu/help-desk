@@ -3,15 +3,15 @@ import { CallContext } from "../../../contexts/calls";
 import { useContext, useState, useEffect } from "react";
 import { ClientContext } from "../../../contexts/clients";
 import styles from "../../../helpers/styles";
-import { deleteCall, updateCall } from "../../../helpers/call";
+import { deleteCall, getCallById, updateCall } from "../../../helpers/call";
 import { AuthContext } from "../../../contexts/auth";
 import Loading from "../../../components/Loading";
+import { toast } from "react-toastify";
 
 function ShowCall()
 {
      const { id } = useParams();
      const { id_call } = useParams();
-     const { calls } = useContext(CallContext);
      const { clients } = useContext(ClientContext);
      const { token } = useContext(AuthContext);
 
@@ -23,26 +23,35 @@ function ShowCall()
      const [loading, setLoading] = useState<boolean>(false);
 
      useEffect(() => {
-          setLoading(true);
-          if (id_call && id && calls)
-          {
-               const call = calls.find(call => call.id == id_call);
-               if (call)
-               {
-                    setSubject(call.subject);
-                    setStatus(call.status);
-                    setComplement(call.complement);
-               }
+          getCall();     
+     }, [id_call, id, clients]);
 
-               const client = clients.find(client => client.id == id);
+
+     async function getCall()
+     {
+          setLoading(true);
+          const call = await getCallById(id_call as string, token as string);
+
+          if (call)
+          {
+               setSubject(call.subject);
+               setStatus(call.status);
+               setComplement(call.complement);
+
+               const client = clients.find((client) => client.id == call.clientId);
                if (client)
                {
                     setClientName(client.name);
-               }
+               }	
           }
-
+          else
+          {
+               await new Promise((resolve) => setTimeout(resolve, 1000));
+               window.location.href = `/clients/${id}`;
+          }
           setLoading(false);
-     }, [id_call, id, calls, clients]);
+
+     }
 
 
      async function handleDelete()

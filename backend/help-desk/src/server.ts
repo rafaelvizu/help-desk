@@ -46,8 +46,15 @@ class Server
                this.StatusDb = true;
           });
 
+          // para adicionar um tempo de resposta
+          this.App.use(async(req, res, next) => {
+               await new Promise(resolve => setTimeout(resolve, 1000));
+               next();
+          });
 
           this.App.use('/', MainRoutes.Routes);
+
+          
           
 
           // start server

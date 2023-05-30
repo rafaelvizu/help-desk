@@ -23,7 +23,7 @@ class CallController
           try
           {
                // cria o chamado
-               await Call.create({
+               const call = await Call.create({
                     subject: validate.subject,
                     status: validate.status,
                     complement: validate.complement,
@@ -31,7 +31,7 @@ class CallController
                     userId: id,
                });
 
-               return res.status(201).json({ message: 'call created' });
+               return res.status(201).json({ message: 'call created', call });
                
           }
           catch (err)
