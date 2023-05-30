@@ -91,7 +91,6 @@ function ShowClient()
                address,
                number,
                complement,
-               district,
                city,
                state,
                cep: cep != null ? onlyNumbers(cep as string) : null,
