@@ -20,7 +20,6 @@ function CreateClient()
      const [address, setAddress] = useState<string | null>(null);
      const [number, setNumber] = useState<number | null>(null);
      const [complement, setComplement] = useState<string | null>(null);
-     const [district, setDistrict] = useState<string | null>(null);
      const [city, setCity] = useState<string | null>(null);
      const [state, setState] = useState<string | null>(null);
      const [cep, setCep] = useState<string | null>(null);
@@ -40,7 +39,6 @@ function CreateClient()
                address,
                number,
                complement,
-               district,
                city,     
                state,
                cep
@@ -59,7 +57,6 @@ function CreateClient()
                setAddress(null);
                setNumber(null);
                setComplement(null);
-               setDistrict(null);
                setCity(null);
                setState(null);
                setCep(null);
@@ -184,13 +181,6 @@ function CreateClient()
                                    <label htmlFor="complement">Complement</label>
                               </div>
 
-                              <div className="input-field">
-                                   <input type="text" name="district" id="district" 
-                                   onChange={(e) => setDistrict(e.target.value)}
-                                   value={district ?? ''}
-                                   />
-                                   <label htmlFor="district">District</label>
-                              </div>
 
                               <div className="input-field">
                                    <input type="text" name="city" id="city" 

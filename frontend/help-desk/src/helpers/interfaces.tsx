@@ -63,7 +63,6 @@ export interface IClient
      address: string | null;
      number: number | null;
      complement: string | null;
-     district: string | null;
      city: string | null;     
      state: string | null;
      cep: string | null;

@@ -1,12 +1,10 @@
 import { useParams } from "react-router-dom";
-import { CallContext } from "../../../contexts/calls";
 import { useContext, useState, useEffect } from "react";
 import { ClientContext } from "../../../contexts/clients";
 import styles from "../../../helpers/styles";
 import { deleteCall, getCallById, updateCall } from "../../../helpers/call";
 import { AuthContext } from "../../../contexts/auth";
 import Loading from "../../../components/Loading";
-import { toast } from "react-toastify";
 
 function ShowCall()
 {
@@ -24,7 +22,7 @@ function ShowCall()
 
      useEffect(() => {
           getCall();     
-     }, [id_call, id, clients]);
+     }, [id_call, id]);
 
 
      async function getCall()
