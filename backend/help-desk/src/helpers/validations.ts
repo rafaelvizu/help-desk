@@ -30,7 +30,6 @@ const clientSchema = Joi.object({
      address: Joi.string().min(1).max(100).trim().allow(null),
      number: Joi.number().integer().allow(null),
      complement: Joi.string().min(1).max(100).trim().allow(null),
-     district: Joi.string().min(1).max(100).trim().allow(null),
      city: Joi.string().min(1).max(100).trim().allow(null),
      state: Joi.string().length(2).pattern(/^[A-Z]+$/i).allow(null),
      cep: Joi.string().length(8).pattern(/^[0-9]+$/i).allow(null),

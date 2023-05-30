@@ -29,10 +29,6 @@ const Client = dbConn.define('client', {
           type: DataTypes.STRING,
           allowNull: true,
      },
-     district: {
-          type: DataTypes.STRING,
-          allowNull: true,
-     },
      city: {
           type: DataTypes.STRING,
           allowNull: true,
